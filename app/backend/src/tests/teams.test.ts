@@ -35,5 +35,18 @@ describe('Testa a rota /teams', () => {
       expect(response.body).to.be.deep.equal(teamsMock);
 
     });
+    it('Buscar um time pelo Id', async () => {
+
+      sinon.stub(Team, "findByPk").resolves(teamsMock[0] as unknown as Team);
+
+      const response = await chai
+              .request(app)
+              .get('/teams/1');
+
+
+      expect(response.status).to.be.equal(200);
+      expect(response.body).to.be.deep.equal(teamsMock[0]);
+
+    });
   });
 });
