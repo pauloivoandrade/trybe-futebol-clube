@@ -1,6 +1,7 @@
 import * as express from 'express';
 import 'express-async-errors';
 import teamRoute from './controller/routes/teams.route';
+import loginRoute from './controller/routes/user.route';
 
 import errorMiddleware from './middlewares/errorMiddleware';
 
@@ -19,6 +20,7 @@ class App {
     // Mantenha ele sempre como o último middleware a ser chamado
     this.app.use(errorMiddleware);
     this.app.use('/teams', teamRoute);
+    this.app.use('/login', loginRoute);
   }
 
   private config():void {

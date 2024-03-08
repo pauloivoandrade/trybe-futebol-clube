@@ -30,7 +30,7 @@ describe('Testes do Teams', () => {
 
   it('Testando get by id retorna um time', async () => {
     chaiHttpResponse = await chai
-       .request(app).get('/teams/5');
+       .request(app).get('/teams/2');
 
     expect(chaiHttpResponse.status).to.be.deep.equal(200);
   });
