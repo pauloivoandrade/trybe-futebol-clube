@@ -35,7 +35,7 @@ describe('Testa a rota /teams', () => {
       expect(response.body).to.be.deep.equal(teamsMock);
 
     });
-    it('Buscar um time pelo Id', async () => {
+    it('Buscar um time especifico pelo Id', async () => {
 
       sinon.stub(Team, "findByPk").resolves(teamsMock[0] as unknown as Team);
 
