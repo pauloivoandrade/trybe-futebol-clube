@@ -1,12 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import ICustomError from '../Interfaces/ICustomError';
+import { ErrorRequestHandler } from 'express';
 
-function errorMiddleware(error: ICustomError, _req: Request, res: Response, _next: NextFunction) {
-  const status = error.statusCode || 500;
-  const message = error.message || 'Something went wrong';
-
-  console.log(error);
+const errorMiddleware: ErrorRequestHandler = (err, _req, res, _next) => {
+  const { status, message } = err;
   return res.status(status).json({ message });
-}
+};
 
 export default errorMiddleware;
