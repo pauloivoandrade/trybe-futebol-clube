@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["chai"],
+    "types": ["chai", "mocha"],
     "target": "es2019",
     "module": "commonjs",
     "sourceMap": true,                     

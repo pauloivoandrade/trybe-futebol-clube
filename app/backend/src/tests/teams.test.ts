@@ -3,36 +3,51 @@ import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
-import { app } from '../app';
-import Team from '../database/models/teams.model';
-import ITeam from '../Interfaces/ITeam';
+import { App } from '../../src/app'
+import teamsMock from './mocks/team.mock';
 
 import { Response } from 'superagent';
+import Team from '../database/models/teams.model';
 
 chai.use(chaiHttp);
 
+const { app } = new App();
+
 const { expect } = chai;
 
-describe('Testes do Teams', () => {
+describe('Testa a rota /teams', () => {
 
-  let chaiHttpResponse: Response;
+  let response: Response;
 
-  afterEach(()=>{
-    sinon.restore();
-  })
+  afterEach(function() { sinon.restore() });
 
-  it('Get retorna todas os times', async () => {
-    chaiHttpResponse = await chai
-       .request(app).get('/teams')
+  describe('Testa método GET na rota /teams', () => {
+    it('Usuário consegue obter todos os times', async () => {
 
-    expect(chaiHttpResponse.status).to.be.deep.equal(200);
+      sinon.stub(Team, "findAll").resolves(teamsMock as unknown as Team[]);
+
+      const response = await chai
+              .request(app)
+              .get('/teams');
+
+
+      expect(response.status).to.be.equal(200);
+      expect(response.body).to.be.deep.equal(teamsMock);
+
+    });
+
+    it('Usuário consegue obter um time pelo Id', async () => {
+
+      sinon.stub(Team, "findByPk").resolves(teamsMock[0] as unknown as Team);
+
+      const response = await chai
+              .request(app)
+              .get('/teams/1');
+
+
+      expect(response.status).to.be.equal(200);
+      expect(response.body).to.be.deep.equal(teamsMock[0]);
+
+    });
   });
-
-  it('Testando get by id retorna um time', async () => {
-    chaiHttpResponse = await chai
-       .request(app).get('/teams/2');
-
-    expect(chaiHttpResponse.status).to.be.deep.equal(200);
-  });
-
 });
