@@ -1,6 +1,6 @@
 import * as express from 'express';
-import TeamService from '../../services/teams.service';
-import TeamController from '../teams.controller';
+import TeamService from '../services/teams.service';
+import TeamController from '../controller/teams.controller';
 
 const teamRoute = express.Router();
 

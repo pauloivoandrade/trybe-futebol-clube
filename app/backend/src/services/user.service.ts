@@ -15,12 +15,13 @@ export default class UserService implements IUserService {
     if (userExists && bcrypt.compareSync(password, userExists.password)) {
       return createToken(login);
     }
-    throw new ErrorGenerate(401, 'Incorrect email or password');
+
+    throw new ErrorGenerate(401, 'Invalid email or password');
   };
 
   findRole = async (email: string): Promise<{ role: string } | void> => {
     const userInformation = await this._userModel.findOne({ where: { email } });
     if (userInformation) return { role: userInformation.role };
-    throw new ErrorGenerate(401, 'Incorrect email or password');
+    throw new ErrorGenerate(401, 'Invalid email or password');
   };
 }

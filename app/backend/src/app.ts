@@ -1,7 +1,7 @@
 import * as express from 'express';
 import 'express-async-errors';
-import teamRoute from './controller/routes/teams.route';
-import loginRoute from './controller/routes/user.route';
+import teamRoute from './routes/teams.route';
+import loginRoute from './routes/user.route';
 
 import errorMiddleware from './middlewares/errorMiddleware';
 
