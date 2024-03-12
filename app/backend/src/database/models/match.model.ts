@@ -1,9 +1,10 @@
 import { Model, INTEGER, BOOLEAN } from 'sequelize';
 import IMatch from '../../Interfaces/IMatch';
 import db from '.';
+import Team from './teams.model';
 
 class Match extends Model implements IMatch {
-  declare readonly id: number;
+  declare id: number;
   declare homeTeamId: number;
   declare awayTeamId: number;
   declare homeTeamGoals: number;
@@ -53,9 +54,11 @@ Match.init({
 }, {
   underscored: true,
   sequelize: db,
-  modelName: 'Matche',
+  modelName: 'Match',
   timestamps: false,
   tableName: 'matches',
 });
 
+Match.belongsTo(Team, { foreignKey: 'homeTeamId', as: 'homeTeam' });
+Match.belongsTo(Team, { foreignKey: 'awayTeamId', as: 'awayTeam' });
 export default Match;

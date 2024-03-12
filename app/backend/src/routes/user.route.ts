@@ -1,5 +1,5 @@
 import * as express from 'express';
-import UserService from '../middlewares/user.service';
+import UserService from '../services/user.service';
 import authMiddleware from '../middlewares/authorization';
 import validateLogin from '../middlewares/loginValidation';
 import UserController from '../controller/user.controller';
