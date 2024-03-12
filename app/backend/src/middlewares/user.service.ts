@@ -11,7 +11,6 @@ export default class UserService implements IUserService {
   login = async (login: ILogin): Promise<string | void> => {
     const { email, password } = login;
     const userExists = await this._userModel.findOne({ where: { email } });
-
     if (userExists && bcrypt.compareSync(password, userExists.password)) {
       return createToken(login);
     }

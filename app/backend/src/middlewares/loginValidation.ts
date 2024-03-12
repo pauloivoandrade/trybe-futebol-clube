@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import userValidation from '../services/validations/userValidation';
 
 const validateLogin = (req: Request, res: Response, next: NextFunction) => {
-  const message = userValidation(req.body);
+  const error = userValidation(req.body);
 
-  if (message) {
-    return res.status(400).json({ message });
+  if (error) {
+    return res.status(error.status).json({ message: error.message });
   }
 
   next();
