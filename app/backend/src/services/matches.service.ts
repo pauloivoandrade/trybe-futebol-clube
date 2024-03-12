@@ -28,4 +28,11 @@ export default class MatchService implements IMatchService {
     });
     return matches;
   };
+
+  finishMatch = async (id: number): Promise<void> => {
+    await this._Match.update(
+      { inProgress: false },
+      { where: { id } },
+    );
+  };
 }
