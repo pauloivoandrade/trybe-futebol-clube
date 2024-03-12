@@ -7,4 +7,5 @@ export default interface IMatchService {
   findWithWhere(query: boolean): Promise<IMatch[]>;
   finishMatch(id: number): Promise<void>;
   updateMatch(id: number, match: MatchGoals): Promise<void>;
+  newMatch(match: IMatch): Promise<IMatch>;
 }

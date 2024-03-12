@@ -10,5 +10,6 @@ const matchController = new MatchController(new MatchService());
 matchRoute.get('/', matchController.findAll);
 matchRoute.patch('/:id/finish', authMiddleware, matchController.finishMatch);
 matchRoute.patch('/:id', authMiddleware, matchController.updateMatch);
+matchRoute.post('/', authMiddleware, matchController.newMatch);
 
 export default matchRoute;
