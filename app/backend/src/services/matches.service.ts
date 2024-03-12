@@ -1,6 +1,8 @@
 import Match from '../database/models/match.model';
 import IMatch from '../Interfaces/IMatch';
-import IMatchService from '../Interfaces/IMatchService';
+import IMatchService, {
+  MatchGoals,
+} from '../Interfaces/IMatchService';
 import Team from '../database/models/teams.model';
 
 export default class MatchService implements IMatchService {
@@ -32,6 +34,13 @@ export default class MatchService implements IMatchService {
   finishMatch = async (id: number): Promise<void> => {
     await this._Match.update(
       { inProgress: false },
+      { where: { id } },
+    );
+  };
+
+  updateMatch = async (id: number, match: MatchGoals): Promise<void> => {
+    await this._Match.update(
+      { homeTeamGoals: match.homeTeamGoals, awayTeamGoals: match.awayTeamGoals },
       { where: { id } },
     );
   };
