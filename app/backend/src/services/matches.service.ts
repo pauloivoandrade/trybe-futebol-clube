@@ -22,8 +22,8 @@ export default class MatchService implements IMatchService {
         inProgress: query,
       },
       include: [
-        { model: Team, as: 'teamHome', attributes: { exclude: ['id'] } },
-        { model: Team, as: 'teamAway', attributes: { exclude: ['id'] } },
+        { model: Team, as: 'homeTeam', attributes: { exclude: ['id'] } },
+        { model: Team, as: 'awayTeam', attributes: { exclude: ['id'] } },
       ],
     });
     return matches;

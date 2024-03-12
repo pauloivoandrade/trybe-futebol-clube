@@ -7,7 +7,8 @@ export default class MatchController {
   findAll: RequestHandler = async (req, res) => {
     let matches = [];
     if (req.query.inProgress) {
-      matches = await this._MatchService.findWithWhere(req.query.in_progress === 'true');
+      const inProgress = req.query.inProgress === 'true';
+      matches = await this._MatchService.findWithWhere(inProgress);
     } else {
       matches = await this._MatchService.findAll();
     }
