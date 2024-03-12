@@ -19,10 +19,10 @@ class App {
 
     // Não remova esse middleware de erro, mas fique a vontade para customizá-lo
     // Mantenha ele sempre como o último middleware a ser chamado
-    this.app.use(errorMiddleware);
     this.app.use('/teams', teamRoute);
     this.app.use('/login', loginRoute);
     this.app.use('/matches', matchRoute);
+    this.app.use(errorMiddleware);
   }
 
   private config():void {

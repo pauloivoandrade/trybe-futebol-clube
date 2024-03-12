@@ -47,13 +47,13 @@ export default class MatchService implements IMatchService {
   };
 
   newMatch = async (match: IMatch): Promise<IMatch> => {
-    if (match.homeTeamId === match.awayTeamId) {
-      throw new ErrorGenerate(422, 'It is not possible to create a match with two equal teams');
-    }
     const homeTeamExists = await this._teamModel.findByPk(match.homeTeamId);
     const awayTeamExists = await this._teamModel.findByPk(match.awayTeamId);
     if (!homeTeamExists || !awayTeamExists) {
       throw new ErrorGenerate(404, 'There is no team with such id!');
+    }
+    if (match.homeTeamId === match.awayTeamId) {
+      throw new ErrorGenerate(422, 'It is not possible to create a match with two equal teams');
     }
     const createdMatch = await this._Match.create({ ...match, inProgress: true });
     return createdMatch;

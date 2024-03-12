@@ -31,6 +31,7 @@ export default class MatchController {
       return res.status(201).json(matchInserted);
     } catch (error) {
       next(error);
+      console.log('AQUI ESTA', error);
     }
   };
 }
