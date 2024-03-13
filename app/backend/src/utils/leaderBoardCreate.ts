@@ -1,4 +1,4 @@
-import ILeaderBoard from '../Interfaces/ILeaderBoard';
+import ILeaderBoard from '../Interfaces/ILeaderBoard.js';
 
 const leaderBoard = () => ({
   name: '',

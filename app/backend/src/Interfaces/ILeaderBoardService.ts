@@ -1,4 +1,4 @@
-import ILeaderBoard from './ILeaderBoard';
+import ILeaderBoard from './ILeaderBoard.js';
 
 export type teamGoals = 'home_team_goals' | 'away_team_goals';
 
