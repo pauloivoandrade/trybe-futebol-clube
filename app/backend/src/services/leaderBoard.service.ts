@@ -1,5 +1,5 @@
 import { QueryTypes } from 'sequelize';
-import ILeaderBoard from '../Interfaces/ILeaderBoard.js';
+import ILeaderBoard from '../Interfaces/ILeaderBoard';
 import sequelizeModel from '../database/models';
 import query from '../utils/queryGenBoard';
 import leaderBoardCreate from '../utils/leaderBoardCreate';
