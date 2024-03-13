@@ -3,6 +3,7 @@ import 'express-async-errors';
 import teamRoute from './routes/teams.route';
 import loginRoute from './routes/user.route';
 import matchRoute from './routes/matches.route';
+import tabulationRoute from './routes/leaderBoard.route';
 
 import errorMiddleware from './middlewares/errorMiddleware';
 
@@ -19,6 +20,7 @@ class App {
 
     // Não remova esse middleware de erro, mas fique a vontade para customizá-lo
     // Mantenha ele sempre como o último middleware a ser chamado
+    this.app.use('/leaderboard', tabulationRoute);
     this.app.use('/teams', teamRoute);
     this.app.use('/login', loginRoute);
     this.app.use('/matches', matchRoute);

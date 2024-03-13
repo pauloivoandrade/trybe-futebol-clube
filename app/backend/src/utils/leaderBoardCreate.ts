@@ -1,4 +1,4 @@
-import ILeaderboard from '../Interfaces/IleaderBoard';
+import ILeaderBoard from '../Interfaces/ILeaderBoard';
 
 const leaderBoard = () => ({
   name: '',
@@ -13,7 +13,7 @@ const leaderBoard = () => ({
   efficiency: 0,
 });
 
-const teamsInfo = (home: ILeaderboard, away: ILeaderboard) => {
+const teamsInfo = (home: ILeaderBoard, away: ILeaderBoard) => {
   const team = leaderBoard();
   team.name = home.name;
   team.totalPoints = Number(home.totalPoints) + Number(away.totalPoints);
@@ -26,14 +26,14 @@ const teamsInfo = (home: ILeaderboard, away: ILeaderboard) => {
   return team;
 };
 
-const sortTeams = (array: ILeaderboard[]) => {
+const sortTeams = (array: ILeaderBoard[]) => {
   array.sort((a, b) => (b.totalPoints - a.totalPoints) || (b.totalVictories - a.totalVictories)
   || (b.goalsBalance - a.goalsBalance) || (b.goalsFavor - a.goalsFavor)
   || (b.goalsOwn - a.goalsOwn));
 };
 
-const leaderBoardCreate = (home: ILeaderboard[], away: ILeaderboard[]) => {
-  const array: ILeaderboard[] = [];
+const leaderBoardCreate = (home: ILeaderBoard[], away: ILeaderBoard[]) => {
+  const array: ILeaderBoard[] = [];
   for (let i = 0; i < home.length; i += 1) {
     for (let j = 0; j < away.length; j += 1) {
       if (home[i].name === away[j].name) {
@@ -41,7 +41,7 @@ const leaderBoardCreate = (home: ILeaderboard[], away: ILeaderboard[]) => {
         team.goalsBalance = team.goalsFavor - team.goalsOwn;
         team.efficiency = (team.totalPoints / (team.totalGames * 3)) * 100;
         team.efficiency = +(team.efficiency.toFixed(2));
-        array.push(team as unknown as ILeaderboard);
+        array.push(team as unknown as ILeaderBoard);
       }
     }
   }
