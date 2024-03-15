@@ -17,6 +17,7 @@ const teamsInfo = (home: ILeaderBoard, away: ILeaderBoard) => {
   const team = leaderBoard();
   team.name = home.name;
   team.totalPoints = Number(home.totalPoints) + Number(away.totalPoints);
+  console.log(home.totalPoints);
   team.totalGames = Number(home.totalGames) + Number(away.totalGames);
   team.totalVictories = Number(home.totalVictories) + Number(away.totalVictories);
   team.totalDraws = Number(home.totalDraws) + Number(away.totalDraws);
@@ -34,17 +35,23 @@ const sortTeams = (array: ILeaderBoard[]) => {
 
 const leaderBoardCreate = (home: ILeaderBoard[], away: ILeaderBoard[]) => {
   const array: ILeaderBoard[] = [];
-  for (let i = 0; i < home.length; i += 1) {
-    for (let j = 0; j < away.length; j += 1) {
-      if (home[i].name === away[j].name) {
-        const team = teamsInfo(home[i], away[j]);
-        team.goalsBalance = team.goalsFavor - team.goalsOwn;
-        team.efficiency = (team.totalPoints / (team.totalGames * 3)) * 100;
-        team.efficiency = +(team.efficiency.toFixed(2));
-        array.push(team as unknown as ILeaderBoard);
-      }
+
+  const awayMap: { [key: string]: ILeaderBoard } = {};
+  away.forEach((team) => {
+    awayMap[team.name] = team;
+  });
+
+  home.forEach((homeTeam) => {
+    const awayTeam = awayMap[homeTeam.name];
+    if (awayTeam) {
+      const team = teamsInfo(homeTeam, awayTeam);
+      team.goalsBalance = team.goalsFavor - team.goalsOwn;
+      team.efficiency = (team.totalPoints / (team.totalGames * 3)) * 100;
+      team.efficiency = +(team.efficiency.toFixed(2));
+      array.push(team);
     }
-  }
+  });
+
   sortTeams(array);
   return array;
 };

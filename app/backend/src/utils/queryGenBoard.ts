@@ -11,15 +11,7 @@ const query = `
     SUM(m.away_team_goals < m.home_team_goals) AS totalLosses,
     SUM(m.away_team_goals) AS goalsFavor,
     SUM(m.home_team_goals) AS goalsOwn,
-    (SUM(m.away_team_goals) - SUM(m.home_team_goals)) AS goalsBalance,
-    FORMAT(
-      (
-        (
-          (SUM(m.away_team_goals > m.home_team_goals) * 3) +
-          SUM(m.away_team_goals = m.home_team_goals)
-        ) / (COUNT(m.id) * 3)
-      ) * 100, 2
-    ) AS efficiency
+    (SUM(m.away_team_goals) - SUM(m.home_team_goals)) AS goalsBalance
   FROM TRYBE_FUTEBOL_CLUBE.matches AS m
   INNER JOIN TRYBE_FUTEBOL_CLUBE.teams AS t ON m.away_team_id = t.id
   WHERE m.in_progress = 0
