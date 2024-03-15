@@ -1,44 +1,83 @@
-import { QueryTypes } from 'sequelize';
-import ILeaderBoard from '../Interfaces/ILeaderBoard';
-import sequelizeModel from '../database/models';
-import query from '../utils/queryGenBoard';
-import leaderBoardCreate from '../utils/leaderBoardCreate';
-import { teamGoals, reference, ILeaderBoardService } from '../Interfaces/ILeaderBoardService';
+import TeamsModel from '../Models/TeamsModel';
+import MatchesModel from '../Models/MatchesModel';
+import TeamPerformance from '../TeamPerfomance';
 
-export default class LeaderboardService implements ILeaderBoardService {
-  constructor(private _model = sequelizeModel) {}
+export default class LeaderboardService {
+  constructor(
+    private teamsModel: TeamsModel = new TeamsModel(),
+    private matchesModel: MatchesModel = new MatchesModel(),
+  ) {
 
-  getClassification = async (team1: teamGoals, team2: teamGoals, teamReference: reference)
-  : Promise<ILeaderBoard[]> => {
-    const classification: ILeaderBoard[] = await this
-      ._model.query(query.replace(/:team1/g, team1).replace(/:team2/g, team2)
-        .replace(/:reference/g, teamReference), { type: QueryTypes.SELECT });
-    const convertedClassification = classification.map((team) => ({
-      ...team,
-      totalPoints: Number(team.totalPoints),
-      totalGames: Number(team.totalGames),
-      totalVictories: Number(team.totalVictories),
-      totalDraws: Number(team.totalDraws),
-      totalLosses: Number(team.totalLosses),
-      goalsFavor: Number(team.goalsFavor),
-      goalsOwn: Number(team.goalsOwn),
-      goalsBalance: Number(team.goalsBalance),
-    }));
+  }
 
-    return convertedClassification;
-  };
+  public async getHomeLeaderboardData() {
+    const matches = await this.matchesModel.getInProgressFalse();
+    const teams = await this.teamsModel.findAll();
 
-  getGeneralClassification = async (): Promise<ILeaderBoard[]> => {
-    const homeClassification = await this
-      .getClassification('home_team_goals', 'away_team_goals', 'home_team');
-    const awayClassification = await this
-      .getClassification('away_team_goals', 'home_team_goals', 'away_team');
-    console.log('HOME', homeClassification);
-    console.log('AWAY', awayClassification);
-    const classification: ILeaderBoard[] = leaderBoardCreate(
-      homeClassification,
-      awayClassification,
-    );
-    return classification;
-  };
+    const instanceAllTeam = teams.map((team) => new TeamPerformance(team.teamName, team.id));
+
+    matches.forEach((match) => {
+      const homeTeamPerformance = instanceAllTeam.filter((team) => team.id === match.homeTeamId)[0];
+      homeTeamPerformance.newMatch(match.homeTeamGoals, match.awayTeamGoals);
+    });
+
+    const allTeams = instanceAllTeam.map((team) => team.performance).sort((a, b) => {
+      if (a.totalPoints !== b.totalPoints) return b.totalPoints - a.totalPoints;
+      if (a.totalVictories !== b.totalVictories) return b.totalVictories - a.totalVictories;
+      if ((a.goalsFavor - a.goalsOwn) !== (b.goalsFavor - b.goalsOwn)) {
+        return (b.goalsFavor - b.goalsOwn) - (a.goalsFavor - a.goalsOwn);
+      }
+      return b.goalsFavor - a.goalsFavor;
+    });
+    return { status: 'SUCCESSFUL', data: allTeams };
+  }
+
+  public async getAwayLeaderboardData() {
+    const matches = await this.matchesModel.getInProgressFalse();
+    const teams = await this.teamsModel.findAll();
+
+    const instanceAllTeam = teams.map((away) => new TeamPerformance(away.teamName, away.id));
+
+    matches.forEach((away) => {
+      const awayTeamPerformance = instanceAllTeam.filter((team) => team.id === away.awayTeamId)[0];
+      awayTeamPerformance.newMatch(away.awayTeamGoals, away.homeTeamGoals);
+    });
+
+    const allTeamAway = instanceAllTeam.map((team) => team.performance).sort((c, d) => {
+      if (c.totalPoints !== d.totalPoints) return d.totalPoints - c.totalPoints;
+      if (c.totalVictories !== d.totalVictories) return d.totalVictories - c.totalVictories;
+      if ((c.goalsFavor - c.goalsOwn) !== (d.goalsFavor - d.goalsOwn)) {
+        return (d.goalsFavor - d.goalsOwn) - (c.goalsFavor - c.goalsOwn);
+      }
+      return d.goalsFavor - c.goalsFavor;
+    });
+
+    return { status: 'SUCCESSFUL', data: allTeamAway };
+  }
+
+  public async allTeamsPeformance() {
+    const matches = await this.matchesModel.getInProgressFalse();
+    const teams = await this.teamsModel.findAll();
+
+    const instanceAllTeam = teams.map((team) => new TeamPerformance(team.teamName, team.id));
+
+    matches.forEach((match) => {
+      const teamPerformance = instanceAllTeam.filter((team) => team.id === match.homeTeamId)[0];
+      teamPerformance.newMatch(match.homeTeamGoals, match.awayTeamGoals);
+
+      const awayTeamPerformance = instanceAllTeam.filter((team) => team.id === match.awayTeamId)[0];
+      awayTeamPerformance.newMatch(match.awayTeamGoals, match.homeTeamGoals);
+    });
+
+    const allTeams = instanceAllTeam.map((team) => team.performance).sort((e, f) => {
+      if (e.totalPoints !== f.totalPoints) return f.totalPoints - e.totalPoints;
+      if (e.totalVictories !== f.totalVictories) return f.totalVictories - e.totalVictories;
+      if ((e.goalsFavor - e.goalsOwn) !== (f.goalsFavor - f.goalsOwn)) {
+        return (f.goalsFavor - f.goalsOwn) - (e.goalsFavor - e.goalsOwn);
+      }
+      return f.goalsFavor - e.goalsFavor;
+    });
+
+    return { status: 'SUCCESSFUL', data: allTeams };
+  }
 }

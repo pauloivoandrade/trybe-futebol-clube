@@ -1,16 +1,21 @@
-import { RequestHandler } from 'express';
-import ITeamService from '../Interfaces/ITeamService';
+import { Request, Response } from 'express';
+import TeamsService from '../services/teams.service';
+import mapStatusHTTP from '../utils/mapStatusHttp';
 
-export default class TeamController {
-  constructor(private _teamService: ITeamService) {}
+export default class TeamsController {
+  constructor(private teamsService: TeamsService = new TeamsService()) { }
 
-  findAll: RequestHandler = async (req, res) => {
-    const teams = await this._teamService.findAll();
-    return res.status(200).json(teams);
-  };
+  public async getAllTeams(_req: Request, res: Response) {
+    const response = await this.teamsService.getAllTeams();
+    return res.status(200).json(response.data);
+  }
 
-  findByPk: RequestHandler = async (req, res) => {
-    const team = await this._teamService.findByPk(Number(req.params.id));
-    return res.status(200).json(team);
-  };
+  public async getTeamById(req: Request, res: Response) {
+    const { id } = req.params;
+    const { status, data } = await this.teamsService.getTeamById(Number(id));
+    if (status !== 'SUCCESSFUL') {
+      return res.status(mapStatusHTTP(status)).json(data);
+    }
+    return res.status(200).json(data);
+  }
 }

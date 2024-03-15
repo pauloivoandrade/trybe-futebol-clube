@@ -4,16 +4,16 @@ import IMatch from '../Interfaces/IMatch';
 import IMatchService, {
   MatchGoals,
 } from '../Interfaces/IMatchService';
-import Team from '../database/models/teams.model';
+import SequelizeTeams from '../database/models/teams.model';
 
 export default class MatchService implements IMatchService {
-  constructor(private _Match = Match, private _teamModel = Team) {}
+  constructor(private _Match = Match, private _teamModel = SequelizeTeams) {}
 
   findAll = async (): Promise<IMatch[]> => {
     const matches = await this._Match.findAll({
       include: [
-        { model: Team, as: 'homeTeam', attributes: { exclude: ['id'] } },
-        { model: Team, as: 'awayTeam', attributes: { exclude: ['id'] } },
+        { model: SequelizeTeams, as: 'homeTeam', attributes: { exclude: ['id'] } },
+        { model: SequelizeTeams, as: 'awayTeam', attributes: { exclude: ['id'] } },
       ],
     });
     return matches;
@@ -25,8 +25,8 @@ export default class MatchService implements IMatchService {
         inProgress: query,
       },
       include: [
-        { model: Team, as: 'homeTeam', attributes: { exclude: ['id'] } },
-        { model: Team, as: 'awayTeam', attributes: { exclude: ['id'] } },
+        { model: SequelizeTeams, as: 'homeTeam', attributes: { exclude: ['id'] } },
+        { model: SequelizeTeams, as: 'awayTeam', attributes: { exclude: ['id'] } },
       ],
     });
     return matches;

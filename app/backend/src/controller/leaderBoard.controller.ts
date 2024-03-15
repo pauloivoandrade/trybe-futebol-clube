@@ -1,23 +1,35 @@
-import { RequestHandler } from 'express';
-import { ILeaderBoardService } from '../Interfaces/ILeaderBoardService';
+import { Request, Response } from 'express';
+import LeaderboardService from '../services/leaderBoard.service';
 
 export default class LeaderboardController {
-  constructor(private _leaderboardService: ILeaderBoardService) {}
+  private leaderboardService: LeaderboardService;
 
-  getLeaderHome: RequestHandler = async (req, res) => {
-    const tabulation = await this._leaderboardService
-      .getClassification('home_team_goals', 'away_team_goals', 'home_team');
-    return res.status(200).json(tabulation);
-  };
+  constructor() {
+    this.leaderboardService = new LeaderboardService();
+  }
 
-  getLeaderAway: RequestHandler = async (req, res) => {
-    const tabulation = await this._leaderboardService
-      .getClassification('away_team_goals', 'home_team_goals', 'away_team');
-    return res.status(200).json(tabulation);
-  };
+  public async getHomeLeaderboard(_req: Request, res: Response) {
+    try {
+      const leaderboardData = await this.leaderboardService.getHomeLeaderboardData();
+      return res.status(200).json(leaderboardData.data);
+    } catch (error) {
+      console.error('Error fetching leaderboard data:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }
 
-  getGeneralLeader:RequestHandler = async (req, res) => {
-    const generalClassification = await this._leaderboardService.getGeneralClassification();
-    return res.status(200).json(generalClassification);
-  };
+  public async getAwayLeaderboard(_req: Request, res: Response) {
+    try {
+      const leaderboardData = await this.leaderboardService.getAwayLeaderboardData();
+      return res.status(200).json(leaderboardData.data);
+    } catch (error) {
+      console.error('Error fetching leaderboard data:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+
+  public async allTeamsPerformance(_req: Request, res: Response) {
+    const leaderboardData = await this.leaderboardService.allTeamsPeformance();
+    return res.status(200).json(leaderboardData.data);
+  }
 }

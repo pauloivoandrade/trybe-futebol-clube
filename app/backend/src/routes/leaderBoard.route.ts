@@ -1,13 +1,23 @@
-import * as express from 'express';
-import LeaderboardService from '../services/leaderBoard.service';
+import { Request, Response, Router } from 'express';
 import LeaderboardController from '../controller/leaderBoard.controller';
 
-const tabulationRoute = express.Router();
+const leaderboardController = new LeaderboardController();
 
-const leaderboardController = new LeaderboardController(new LeaderboardService());
+const router = Router();
 
-tabulationRoute.get('/home', leaderboardController.getLeaderHome);
-tabulationRoute.get('/away', leaderboardController.getLeaderAway);
-tabulationRoute.get('/', leaderboardController.getGeneralLeader);
+router.get(
+  '/home',
+  (req: Request, res: Response) => leaderboardController.getHomeLeaderboard(req, res),
+);
 
-export default tabulationRoute;
+router.get(
+  '/away',
+  (req: Request, res: Response) => leaderboardController.getAwayLeaderboard(req, res),
+);
+
+router.get(
+  '/',
+  (req: Request, res: Response) => leaderboardController.allTeamsPerformance(req, res),
+);
+
+export default router;
